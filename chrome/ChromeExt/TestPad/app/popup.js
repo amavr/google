@@ -107,7 +107,6 @@ function ChromeApplication() {
                         ],
                         'mimeType': 'application/vnd.google-apps.folder'
                     };
-                    console.log(body_request);
 
                     //var request = gapi.client.request({
                     //    'path': 'drive/v2/files',
