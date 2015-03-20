@@ -8,16 +8,21 @@ function PageInfo() {
     me.box_log = null;
     me.btn1 = null;
 
-    function constructor() {
-        console.debug("PageInfo.constructor ");
-        me.box_log = document.getElementById("box-log");
-        me.btn1 = document.getElementById("btn1");
-    }
-
     me.Log = function (html, crlf) {
         if (crlf === true) html += '<br/>';
 
         me.box_log.innerHTML += html;
+    }
+
+    me.showFiles = function (files) {
+        for (var i = 0; i < files.length; i++) {
+            me.box_log.innerHTML += '<a href="' + files[i].selfLink + '">' + files[i].title + '</a><br/>';
+        }
+    }
+
+    function constructor() {
+        me.box_log = document.getElementById("box-log");
+        me.btn1 = document.getElementById("btn1");
     }
 
     constructor();
@@ -50,37 +55,39 @@ function ChromeApplication() {
 
     var HOME = 'TreePad';
 
-    var query_folders = 'mimeType contains "application/vnd.google-apps.folder"';
-
-    var query_home = 'title = "'+ HOME +'"';
-
-    var folder_options = {
-        'q': query_folders,
-        'fields': 'items(id,originalFilename,mimeType,modifiedDate,kind,title)',
-        'pageToken': null
-    }
-
-    var findHomeFolder = function (callback) {
-        folder_options.q = query_folders + ' and ' + query_home;
-
+    var fileList = function (callback, options) {
         var retrievePageOfFiles = function (request, result) {
             request.execute(function (resp) {
                 result = result.concat(resp.items);
                 var nextPageToken = resp.nextPageToken;
                 if (nextPageToken) {
                     folder_options.pageToken = nextPageToken;
-                    request = gapi.client.drive.files.list(folder_options);
+                    request = gapi.client.drive.files.list(options);
                     retrievePageOfFiles(request, result);
                 } else {
-                    if (result.length > 0)
-                        callback(result[0]);
-                    else
-                        callback(null);
+                    callback(result);
                 }
             });
         }
-        var initialRequest = gapi.client.drive.files.list(folder_options);
+        var initialRequest = gapi.client.drive.files.list(options);
         retrievePageOfFiles(initialRequest, []);
+    }
+
+    var findHomeFolder = function (callback) {
+
+        var options = {
+            'q': 'mimeType contains "application/vnd.google-apps.folder" and title = "' + HOME + '" and trashed = false',
+            'fields': 'items(id,originalFilename,mimeType,modifiedDate,kind,title)',
+            'pageToken': null
+        }
+
+        fileList(
+            function (result) {
+                var folder = (result.length > 0) ? result[0] : null;
+                callback(folder);
+            },
+            options
+        );
     }
 
     var getRootFolder = function (callback) {
@@ -90,77 +97,70 @@ function ChromeApplication() {
         });
     }
 
-    var checkTreePadFolder = function (callback) {
+    //var request = gapi.client.request({
+    //    'path': 'drive/v2/files',
+    //    'method': 'POST',
+    //    'body': body_request
+    //});
+
+    var createFolder = function(callback, title, parent_id){
+        var body_request = {
+            'title': HOME,
+            'parents': [
+                { 'id': root_id }
+            ],
+            'mimeType': 'application/vnd.google-apps.folder'
+        };
+
+        var request = gapi.client.drive.files.insert(body_request);
+        request.execute(function (resp) {
+            // передавать нечего
+            callback();
+        });
+    }
+
+    var getHomeFolder = function (callback) {
         getRootFolder(function (root_id) {
             findHomeFolder(function (home_folder) {
-                console.log(home_folder);
-                if (home_folder) {
-                    pi.Log('found');
+                if (home_folder == null) {
+                    createFolder(function () {
+                        // возвращается пустой список
+                        callback([]);
+                    });
                 }
                 else {
-                    pi.Log('not found');
 
-                    var body_request = {
-                        'title': HOME,
-                        'parents': [
-                            { 'id': root_id }
-                        ],
-                        'mimeType': 'application/vnd.google-apps.folder'
-                    };
+                    var file_fields = 'items(id,downloadUrl,mimeType,webViewLink,fileExtension,webContentLink,defaultOpenWithLink,kind,title)';
+                    var options = {
+                        'q': '"' + home_folder.id + '" in parents and trashed = false',
+                        // 'q': '"' + home_folder.id + '" in parents and trashed = false and title contains ".json"',
+                        'fields': file_fields,
+                        'pageToken': null
+                    }
 
-                    //var request = gapi.client.request({
-                    //    'path': 'drive/v2/files',
-                    //    'method': 'POST',
-                    //    'body': body_request
-                    //});
-
-                    var request = gapi.client.drive.files.insert(body_request);
-                    request.execute(function (resp) {
-                        console.log(resp);
-                    });
+                    fileList(
+                        function (files) {
+                            console.log(files);
+                            pi.showFiles(files);
+                        },
+                        options
+                    );
                 }
             });
         });
     }
 
-    var getFoldrs = function (callback, parent_id) {
-
-        folder_options.q = parent_id == undefined ? query_folders : '"' + parent_id + '" in parents and ' + query_folders;
-
-        var retrievePageOfFiles = function (request, result) {
-            request.execute(function (resp) {
-                result = result.concat(resp.items);
-                var nextPageToken = resp.nextPageToken;
-                if (nextPageToken) {
-                    folder_options.pageToken = nextPageToken;
-                    request = gapi.client.drive.files.list(folder_options);
-                    retrievePageOfFiles(request, result);
-                } else {
-                    callback(result);
-                }
-            });
-        }
-        var initialRequest = gapi.client.drive.files.list(folder_options);
-        retrievePageOfFiles(initialRequest, []);
-    }
-
-    var retrieveDriveFiles = function () {
-        getRootFolder(function (root_id) {
-            getFoldrs(function (items) {
-                var count = items.length;
-                for (var i = 0; i < count; i++) {
-                    pi.Log(items[i].title, true);
-                }
-                console.log(items);
-            },
-            root_id
-            );
+    var readFiles = function () {
+        getHomeFolder(function (files) {
+            var count = files.length;
+            for (var i = 0; i < count; i++) {
+                pi.Log('<a href="' + files[i].id + '">' + files[i].title + '</a>');
+            }
         });
     }
 
     var onAuthComplete = function (result) {
-        // gapi.client.load('drive', 'v2', retrieveDriveFiles);
-        gapi.client.load('drive', 'v2', checkTreePadFolder);
+        gapi.client.load('drive', 'v2', readFiles);
     }
 
     var onClickBtn1 = function () {
