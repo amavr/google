@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+
+  "name": "Omnibox GDrive Search",
+  "description": "Search and open your Google Drive files from the omnibox!",
+  "version": "0.0.2",
+
+  "background": {
+    "page": "background.html"
+  },
+  "options_page": "options.html",
+
+  "icons": {
+    "16": "icons/16-drive.png",
+    "48": "icons/48-drive.png",
+    "128": "icons/128-drive.png"
+  },
+
+  "permissions": [
+    "tabs",
+    "https://www.googleapis.com/",
+    "https://apis.google.com/",
+    "https://www.google.com/",
+    "https://accounts.google.com/"
+  ],
+
+  "content_security_policy": "script-src 'self' https://apis.google.com; object-src 'self'",
+
+  "omnibox": {
+    "keyword": "gd"
+  }
+}

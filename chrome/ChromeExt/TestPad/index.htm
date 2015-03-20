@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Chrome Extension test page</title>
+</head>
+<body>        
+    
+    <p>Use this page to test your Chrome extension</p>
+
+    <p>
+        Learn how to write Chrome extensions in the
+        <a href="http://developer.chrome.com/extensions/getstarted.html">Getting started guide</a>
+    </p>
+
+    <p>The /app/ folder is where the Chrome extension is located</p>
+
+    <button id="btn1">Test-1</button>
+    <div id="box-log"></div>
+
+    <script src="app/event.js"></script>
+    <script src="app/auth.js"></script>
+    <script src="app/popup.js"></script>
+    <script>
+        CLIENT_ID = '458531844515-b6l0cbrqpbllqa8gfvsa9ulu288krok9.apps.googleusercontent.com';
+    </script>
+    <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=gapiLoad"></script>
+</body>
+</html>
