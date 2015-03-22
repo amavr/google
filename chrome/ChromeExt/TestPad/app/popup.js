@@ -5,8 +5,14 @@ function PageInfo() {
 
     var me = this;
 
+    var re = /\d{2}(\d{2})-(\d{2})-(\d{2})T(\d{2}):(\d{2}).*/gi
+
     me.box_log = null;
     me.btn1 = null;
+
+    var dt2str = function (dt) {
+        return dt.replace(re, '$3.$2.$1 $4:$5');
+    }
 
     me.Log = function (html, crlf) {
         if (crlf === true) html += '<br/>';
@@ -15,9 +21,17 @@ function PageInfo() {
     }
 
     me.showFiles = function (files) {
+        var html = '<table>';
         for (var i = 0; i < files.length; i++) {
-            me.box_log.innerHTML += '<a href="' + files[i].selfLink + '">' + files[i].title + '</a><br/>';
+            console.log(files[i]);
+            html += '<tr>';
+            html += '<td nowrap><a href="' + files[i].selfLink + '">' + files[i].title + '</a></td>';
+            html += '<td nowrap>' + files[i].fileSize + '</td>';
+            html += '<td nowrap>' + dt2str(files[i].modifiedDate) + '</td>';
+            html += '</tr>';
         }
+        html += '</table>';
+        me.box_log.innerHTML = html;
     }
 
     function constructor() {
@@ -130,10 +144,10 @@ function ChromeApplication() {
                 }
                 else {
 
-                    var file_fields = 'items(id,downloadUrl,mimeType,webViewLink,fileExtension,webContentLink,defaultOpenWithLink,kind,title)';
+                    var file_fields = 'items(id,downloadUrl,mimeType,webViewLink,fileExtension,webContentLink,defaultOpenWithLink,kind,fileSize,modifiedDate,title)';
                     var options = {
                         'q': '"' + home_folder.id + '" in parents and trashed = false',
-                        // 'q': '"' + home_folder.id + '" in parents and trashed = false and title contains ".json"',
+                        // 'q': '"' + home_folder.id + '" in parents and trashed = false and fileExtension = "treepad"',
                         'fields': file_fields,
                         'pageToken': null
                     }
