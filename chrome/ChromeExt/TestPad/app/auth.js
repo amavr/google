@@ -1,16 +1,21 @@
 ﻿'use strict';
 
-// Client ID for Chrome application
-// CLIENT ID
-var CLIENT_ID = '458531844515-8aohg5151k1gdmfbt5762dpjcc25g9e9.apps.googleusercontent.com';
+var Settings = {
 
-// Key for browser applications
-// API KEY
-var API_KEY = 'AIzaSyAAdwcBLfjclphcokapqnSEEp2PX6Y6la0';
+    // Client ID for Chrome application
+    // CLIENT ID
+    ClientID: "458531844515-8aohg5151k1gdmfbt5762dpjcc25g9e9.apps.googleusercontent.com",
 
-var SCOPES = [
-	'https://www.googleapis.com/auth/drive'
-];
+    // Key for browser applications
+    // API KEY
+    ApiKey: "AIzaSyAAdwcBLfjclphcokapqnSEEp2PX6Y6la0",
+
+    AccessToken: null,
+
+    Scopes: [
+        'https://www.googleapis.com/auth/drive'
+    ]
+}
 
 var auth_callback = function (result) {
     console.debug("default callback");
@@ -18,7 +23,7 @@ var auth_callback = function (result) {
 };
 
 function gapiLoad() {
-    gapi.client.setApiKey(API_KEY);
+    gapi.client.setApiKey(Settings.ApiKey);
     // window.setTimeout(checkAuth, 1);
 }
 
@@ -27,8 +32,8 @@ function checkAuth(callback) {
 
     gapi.auth.authorize(
         {
-            'client_id': CLIENT_ID,
-            'scope': SCOPES,
+            'client_id': Settings.ClientID,
+            'scope': Settings.Scopes,
             'immediate': true
         },
         handleAuthResult);
@@ -37,8 +42,8 @@ function checkAuth(callback) {
 function handleAuthResult(authResult) {
 
     if (authResult && !authResult.error) {
+        Settings.AccessToken = authResult.access_token;
         if (auth_callback) auth_callback(authResult);
-        // var token = gapi.auth.getToken();
         // console.log(token);
         // gapi.client.load('drive', 'v2', retrieveDriveFiles);
         console.log("auth automatic");
@@ -46,8 +51,8 @@ function handleAuthResult(authResult) {
     else {
         gapi.auth.authorize(
 			{
-			    "client_id": CLIENT_ID,
-			    "scope": SCOPES,
+			    'client_id': Settings.ClientID,
+			    'scope': Settings.Scopes,
 			    "immediate": false
 			},
 			handleAuthResult);

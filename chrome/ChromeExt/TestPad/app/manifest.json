@@ -18,7 +18,7 @@
     },
 
     "background": {
-        "scripts": [ "event.js" ]
+        "scripts": [ "back.js" ]
     },
 
     "key": "hofdfblhcmepaacojjjonbmheaphpnea"
