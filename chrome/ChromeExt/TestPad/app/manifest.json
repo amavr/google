@@ -19,7 +19,7 @@
     },
 
     "background": {
-        "scripts": [ "background.js" ]
+        "scripts": [ "back.js" ]
     },
 
     "key": "hofdfblhcmepaacojjjonbmheaphpnea"
