@@ -38,8 +38,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="app\back.js" />
+    <Content Include="app\editor.js" />
     <Content Include="app\event.js" />
     <Content Include="app\auth.js" />
+    <Content Include="app\editor.html" />
     <Content Include="app\img\icon.png" />
     <Content Include="app\popup.html" />
     <Content Include="app\popup.js" />

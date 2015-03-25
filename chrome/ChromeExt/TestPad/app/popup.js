@@ -14,6 +14,10 @@ function PageInfo() {
         return dt.replace(re, '$3.$2.$1 $4:$5');
     }
 
+    var setRefHandler = function (item, i) {
+        Event.add(item, 'click', capp.onFileSelect);
+    }
+
     me.Log = function (html, crlf) {
         if (crlf === true) html += '<br/>';
 
@@ -23,15 +27,20 @@ function PageInfo() {
     me.showFiles = function (files) {
         var html = '<table>';
         for (var i = 0; i < files.length; i++) {
-            console.log(files[i]);
             html += '<tr>';
-            html += '<td nowrap><a href="' + files[i].selfLink + '">' + files[i].title + '</a></td>';
+            //html += '<td nowrap><a href="' + files[i].selfLink + '" >' + files[i].title + '</a></td>';
+            html += '<td nowrap><a id="file-' + files[i].id + '" class="file-ref" href="' + files[i].selfLink + '">' + files[i].title + '</a></td>';
             html += '<td nowrap>' + files[i].fileSize + '</td>';
             html += '<td nowrap>' + dt2str(files[i].modifiedDate) + '</td>';
             html += '</tr>';
         }
         html += '</table>';
         me.box_log.innerHTML = html;
+
+        var refs = document.getElementsByClassName('file-ref');
+        for (var prop in refs)
+            setRefHandler(refs[prop], prop);
+
     }
 
     function constructor() {
@@ -144,7 +153,7 @@ function ChromeApplication() {
                 }
                 else {
 
-                    var file_fields = 'items(id,downloadUrl,mimeType,webViewLink,fileExtension,webContentLink,defaultOpenWithLink,kind,fileSize,modifiedDate,title)';
+                    var file_fields = 'items(id,mimeType,fileExtension,downloadUrl,webViewLink,webContentLink,defaultOpenWithLink,selfLink,kind,fileSize,modifiedDate,title)';
                     var options = {
                         'q': '"' + home_folder.id + '" in parents and trashed = false',
                         // 'q': '"' + home_folder.id + '" in parents and trashed = false and fileExtension = "treepad"',
@@ -182,13 +191,24 @@ function ChromeApplication() {
         checkAuth(onAuthComplete);
     }
 
-    me.Init = function () {
+    me.init = function () {
         pi = new PageInfo();
         Event.add(pi.btn1, 'click', onClickBtn1);
     }
 
+    me.onFileSelect = function (e) {
+        chrome.runtime.getBackgroundPage(function (eventPage) {
+            console.log(e);
+            var file_id = e.srcElement.id.slice(5);
+            //eventPage.test(e.srcElement.id.slice(5));
+            //eventPage.openTab(e.srcElement.attributes['href']);
+            eventPage.openTab(file_id);
+        });
+        return false;
+    }
+
     var constructor = function () {
-        me.Init();
+        me.init();
     }
 
     constructor();
