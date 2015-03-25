@@ -7,6 +7,7 @@
 
     "permissions": [
         "identity",
+        "tabs",
         "https://*.google.com/"
     ],
 
@@ -18,7 +19,7 @@
     },
 
     "background": {
-        "scripts": [ "event.js" ]
+        "scripts": [ "background.js" ]
     },
 
     "key": "hofdfblhcmepaacojjjonbmheaphpnea"
