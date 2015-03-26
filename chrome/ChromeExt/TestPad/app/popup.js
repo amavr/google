@@ -216,5 +216,4 @@ function ChromeApplication() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    capp = new ChromeApplication();
 });
