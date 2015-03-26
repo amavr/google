@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
 
-    "name": "TestPad",
+    "name": "TreePad",
     "description": "This extension tests a browser action",
     "version": "1.0.2",
 

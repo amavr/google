@@ -1,11 +1,64 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
+    <meta charset="utf-8" />
+    <title>Chrome Extension test page</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="css/tree.css" type="text/css">
+    <style>
+        html, body, .h100perc {
+            height: 100%;
+        }
+
+        textarea.h100perc {
+            height: 95%;
+            width: 95%;
+            font-family: Consolas;
+        }
+
+        #tree-box {
+            overflow: auto;
+        }
+
+        .glyphicon2 {
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
+    <div class="row h100perc">
+        <div class="col-md-4 h100perc">
+            <button id="btn-add" type="button" class="btn btn-default" aria-label="Left Align">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add node
+            </button>
+
+            <button id="btn-del" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete node
+            </button>
+
+            <button id="btn-upd" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save
+            </button>
+                      
+
+            <div id="tree-box">
+
+            </div>
+        </div>
+        <div class="col-md-8 h100perc">
+            <textarea id="text" class="h100perc"></textarea>
+        </div>
+    </div>
+
     <pre id="box-log"></pre>
-    <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
+
+
+
+    <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/tree.js"></script>
     <script type="text/javascript" src="js/editor.js"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
+
 </body>
 </html>

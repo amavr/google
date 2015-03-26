@@ -1,6 +1,4 @@
-﻿var editor = null;
-
-function Editor(FileID, AccessToken) {
+﻿function Editor(FileID, AccessToken) {
 
     var me = this;
     var file_id = FileID;
@@ -11,11 +9,12 @@ function Editor(FileID, AccessToken) {
             'path': '/drive/v2/files/'+file_id,
             'headers': {'Authorization': 'Bearer ' + access_token},
             'method': 'GET',
-            'params': { "fields": "downloadUrl" }
+            'params': { "fields": "downloadUrl,title" }
         });
 
         request.execute(function (file) {
             if (file.downloadUrl) {
+                document.title = file.title;
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', file.downloadUrl);
                 xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
@@ -41,19 +40,15 @@ function Editor(FileID, AccessToken) {
         }
     }
 
+    this.load = function (callback) {
+        downloadFile(callback);
+    }
+
     var constructor = function () {
-        downloadFile(printFile);
+        // downloadFile(printFile);
     }
 
     constructor();
-}
-
-window.addEventListener('load', function (evt) {
-    editor = new Editor(getParameterByName('id'), getParameterByName('ses'));
-});
-
-function onApiLoad() {
-    editor = new Editor(getParameterByName('id'), getParameterByName('ses'));
 }
 
 function getParameterByName(name) {
@@ -62,3 +57,23 @@ function getParameterByName(name) {
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
+
+window.addEventListener('load', function (evt) {
+    // editor = new Editor(getParameterByName('id'), getParameterByName('ses'));
+
+    var tree = new TreePad("#tree-box");
+    var editor = new Editor(getParameterByName('id'), getParameterByName('ses'));
+
+    editor.load(function (text) {
+        // console.log(text);
+        var nodes = JSON.parse(text);
+        console.log(nodes);
+        tree.show(nodes);
+    });
+
+});
+
+function onApiLoad() {
+    // editor = new Editor(getParameterByName('id'), getParameterByName('ses'));
+}
+
