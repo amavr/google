@@ -25,13 +25,24 @@ function PageInfo() {
     }
 
     me.showFiles = function (files) {
+        var html = '<ul>';
+        for (var i = 0; i < files.length; i++) {
+            html += '<li><a id="file-' + files[i].id + '" class="file-ref" href="' + files[i].selfLink + '">' + files[i].title + '</a></li>';
+        }
+        html += '</ul>';
+        me.box_log.innerHTML = html;
+
+        var refs = document.getElementsByClassName('file-ref');
+        for (var prop in refs)
+            setRefHandler(refs[prop], prop);
+    }
+
+
+    me.showFiles2 = function (files) {
         var html = '<table>';
         for (var i = 0; i < files.length; i++) {
             html += '<tr>';
-            //html += '<td nowrap><a href="' + files[i].selfLink + '" >' + files[i].title + '</a></td>';
             html += '<td nowrap><a id="file-' + files[i].id + '" class="file-ref" href="' + files[i].selfLink + '">' + files[i].title + '</a></td>';
-            html += '<td nowrap>' + files[i].fileSize + '</td>';
-            html += '<td nowrap>' + dt2str(files[i].modifiedDate) + '</td>';
             html += '</tr>';
         }
         html += '</table>';
@@ -193,7 +204,8 @@ function ChromeApplication() {
 
     me.init = function () {
         pi = new PageInfo();
-        Event.add(pi.btn1, 'click', onClickBtn1);
+        // Event.add(pi.btn1, 'click', onClickBtn1);
+        checkAuth(onAuthComplete);
     }
 
     me.onFileSelect = function (e) {
@@ -202,12 +214,13 @@ function ChromeApplication() {
             var file_id = e.srcElement.id.slice(5);
             //eventPage.test(e.srcElement.id.slice(5));
             //eventPage.openTab(e.srcElement.attributes['href']);
-            eventPage.openTab(file_id);
+            eventPage.openTab(file_id, Settings.AccessToken);
         });
         return false;
     }
 
     var constructor = function () {
+        console.log('ChromeApp created');
         me.init();
     }
 
@@ -216,4 +229,5 @@ function ChromeApplication() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    // capp = new ChromeApplication();
 });

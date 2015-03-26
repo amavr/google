@@ -12,14 +12,38 @@
         #box-log {
             font: normal 11pt Consolas;
         }
+        #box-loading {
+            min-height: 48px;
+            min-width: 48px;
+            background-image: url(img/globe32.gif);
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        ul{
+            list-style: none;
+            padding: 0;
+        }
+        li{
+            line-height: 24px;
+        } 
+        li a{
+            color: black;
+            text-decoration: none;
+        }
+        li a:hover{
+            text-decoration: underline;
+        }
+
     </style>
-    <script src="event.js"></script>
-    <script src="auth.js"></script>
-    <script src="popup.js"></script>
+    <script src="js/event.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/popup.js"></script>
 </head>
 <body>
+    <!--
     <button id="btn1">Request</button>
-    <div id="box-log"></div>
+    -->
+    <div id="box-log"><div id="box-loading"></div></div>
     <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=gapiLoad"></script>
 </body>
 </html>

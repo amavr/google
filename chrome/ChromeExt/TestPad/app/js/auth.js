@@ -24,7 +24,7 @@ var auth_callback = function (result) {
 
 function gapiLoad() {
     gapi.client.setApiKey(Settings.ApiKey);
-    // window.setTimeout(checkAuth, 1);
+    capp = new ChromeApplication();
 }
 
 function checkAuth(callback) {

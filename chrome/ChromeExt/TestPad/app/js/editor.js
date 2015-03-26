@@ -1,30 +1,24 @@
 ﻿var editor = null;
 
-function Editor(FileID) {
+function Editor(FileID, AccessToken) {
 
     var me = this;
     var file_id = FileID;
+    var access_token = AccessToken;
 
     var downloadFile = function (callback) {
-        // Settings.AccessToken = gapi.auth.getToken().access_token;
         var request = gapi.client.request({
             'path': '/drive/v2/files/'+file_id,
-            // 'headers': {'Authorization': 'Bearer ' + accessToken},
+            'headers': {'Authorization': 'Bearer ' + access_token},
             'method': 'GET',
-            // 'params': { "fileId": file_id, "fields": "downloadUrl" }
             'params': { "fields": "downloadUrl" }
-    });
-        //var request = gapi.client.drive.files.get({
-        //    'fileId': file_id,
-        //    'fields': 'downloadUrl'
-        //});
+        });
+
         request.execute(function (file) {
             if (file.downloadUrl) {
-                // var accessToken = gapi.auth.getToken().access_token;
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', file.downloadUrl);
-                xhr.setRequestHeader('Authorization', 'Bearer ' + Settings.AccessToken);
-                // xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+                xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
                 xhr.onload = function () {
                     callback(xhr.responseText);
                 };
@@ -47,24 +41,19 @@ function Editor(FileID) {
         }
     }
 
-    var onAuthComplete = function (authResult) {
-        console.log(authResult);
-        downloadFile(printFile);
-    }
-
     var constructor = function () {
-        checkAuth(onAuthComplete);
+        downloadFile(printFile);
     }
 
     constructor();
 }
 
 window.addEventListener('load', function (evt) {
-    editor = new Editor(getParameterByName('id'));
+    editor = new Editor(getParameterByName('id'), getParameterByName('ses'));
 });
 
 function onApiLoad() {
-    editor = new Editor(getParameterByName('id'));
+    editor = new Editor(getParameterByName('id'), getParameterByName('ses'));
 }
 
 function getParameterByName(name) {
