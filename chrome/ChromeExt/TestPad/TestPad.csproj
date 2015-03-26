@@ -38,15 +38,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="app\back.js" />
-    <Content Include="app\editor.js" />
-    <Content Include="app\event.js" />
-    <Content Include="app\auth.js" />
     <Content Include="app\editor.html" />
-    <Content Include="app\img\icon.png" />
+    <Content Include="app\img\globe32.gif" />
+    <Content Include="app\img\node-tree-icon-16.png" />
+    <Content Include="app\img\node-tree-icon-24.png" />
+    <Content Include="app\img\node-tree-icon-32.png" />
+    <Content Include="app\index2.htm" />
+    <Content Include="app\js\auth.js" />
+    <Content Include="app\js\back.js" />
+    <Content Include="app\js\editor.js" />
+    <Content Include="app\js\event.js" />
+    <Content Include="app\js\popup.js" />
     <Content Include="app\popup.html" />
-    <Content Include="app\popup.js" />
-    <Content Include="dummy.html" />
     <Content Include="Properties\build\lib\Ionic.Zip.DLL" />
     <Content Include="Properties\build\lib\MSBuild.ExtensionPack.dll" />
     <Content Include="screenshots\screenshot.png" />
