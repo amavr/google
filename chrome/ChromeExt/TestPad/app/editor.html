@@ -20,6 +20,10 @@
             overflow: auto;
         }
 
+        #tree-box ul div{
+            display: inline;
+        }
+
         .glyphicon2 {
             margin-right: 8px;
         }
@@ -28,6 +32,14 @@
 <body>
     <div class="row h100perc">
         <div class="col-md-4 h100perc">
+            <button id="btn-new" class="btn btn-default">
+                <span class="glyphicon glyphicon-asterisk" ></span> New
+            </button>
+
+            <button id="btn-upd" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save
+            </button>
+
             <button id="btn-add" type="button" class="btn btn-default" aria-label="Left Align">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add node
             </button>
@@ -36,10 +48,6 @@
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete node
             </button>
 
-            <button id="btn-upd" type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save
-            </button>
-                      
 
             <div id="tree-box">
 
@@ -56,6 +64,7 @@
 
     <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/event.js"></script>
     <script type="text/javascript" src="js/tree.js"></script>
     <script type="text/javascript" src="js/editor.js"></script>
     <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>

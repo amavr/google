@@ -49,6 +49,31 @@
         e.stopPropagation();
     }
 
+    var getNodeData = function (node) {
+        var data = {
+            title: $('> span > div').text(),
+            text: node.data('text'),
+            children: []
+        }
+        var nodes = node.find(' > li');
+        for (var i = 0; i < nodes.length; i++) {
+            data.children.push(getNodeData(nodes[i]))
+        }
+    }
+
+    this.getData = function () {
+        var list = [];
+        var root_ul = $('.tree > ul');
+
+
+        var nodes = root_ul.find(' > li');
+        for (var i = 0; i < nodes.length; i++) {
+            list.push(getNodeData(nodes[i]))
+        }
+
+        return list()
+    }
+
     this.show = function (nodes) {
         if (nodes.length > 0) {
             var $ul = $("ul", $obj.append("<ul></ul>"));
@@ -75,6 +100,29 @@
         }
 
         new TreeNode($ul, node_data, true, clickLabel, clickIcon);
+    }
+
+    this.delete = function () {
+        var selected = $(".tree li > span.selected");
+        var li = selected.parent();
+        var new_li = li.next();
+        if (new_li.length == 0) {
+            new_li = li.prev();
+            if (new_li.length == 0) {
+                new_li = li.parent().parent();
+
+                new_li
+                    .attr('title', node_states.expanded.title)
+                    .find('span > i')
+                    .addClass('glyphicon-file')
+                    .removeClass('glyphicon-' + node_states.expanded.img_old)
+                    .removeClass('glyphicon-' + node_states.expanded.img_new);
+                }
+        }
+        selected.parent().remove();
+        if (new_li.length > 0) {
+            $('span', new_li).addClass('selected');
+        }
     }
 }
 
@@ -105,7 +153,7 @@ function TreeNode(parent, node_data, visible, onClickLabel, onClickIcon) {
         $i.addClass('glyphicon-minus');
     }
 
-    var html = '<li' + li_class + '><span><i class="glyphicon glyphicon-' + i_class + '"></i>' + node_data.title + '</span></li>';
+    var html = '<li' + li_class + '><span><i class="glyphicon glyphicon-' + i_class + '"></i><div>' + node_data.title + '</div></span></li>';
     var $me = $(html);
     $parent.append($me);
     if (!visible) {
@@ -115,6 +163,26 @@ function TreeNode(parent, node_data, visible, onClickLabel, onClickIcon) {
 
     $("span", $me).bind("click", onClickLabel);
     $("span > i", $me).bind("click", onClickIcon);
+
+    $("span > div", $me).bind('dblclick', function () {
+        this.contentEditable = true;
+    });
+
+    $("span > div", $me).bind('blur', function () {
+        this.contentEditable = false;
+    });
+
+    $("span > div", $me).keypress(function (e) {
+        if (e.which == 13)
+        {
+            this.contentEditable = false;
+            return false;
+        }
+    });
+
+    $("span", $me).focusout(function () {
+        $me.data = $("#text").val();
+    });
 
     if (node_data.children != undefined) {
         if (node_data.children.length > 0) {
@@ -126,4 +194,7 @@ function TreeNode(parent, node_data, visible, onClickLabel, onClickIcon) {
         }
     }
 
+    this.data = function () {
+        return $me.data('text');
+    }
 }
