@@ -71,6 +71,18 @@ window.addEventListener('load', function (evt) {
         tree.show(nodes);
     });
 
+    $('#btn-upd').bind('click', function () {
+        console.log(tree.getData());
+    });
+
+    $('#btn-add').bind('click', function () {
+        tree.add({ title: 'new node', text: '' });
+    });
+
+    $('#btn-del').bind('click', function () {
+        tree.delete();
+    });
+
 });
 
 function onApiLoad() {
